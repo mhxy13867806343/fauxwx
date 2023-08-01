@@ -1,0 +1,29 @@
+{
+  "name": "vue-wx-pc-nvvc",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vueuse/core": "^9.13.0",
+    "element-plus": "^2.3.8",
+    "normalize.css": "^8.0.1",
+    "pinia": "^2.1.6",
+    "unplugin-auto-import": "^0.16.6",
+    "unplugin-compression": "^0.0.4",
+    "unplugin-vue-components": "^0.25.1",
+    "vite-plugin-clean": "^1.0.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-html": "^3.2.0",
+    "vue": "^3.2.47",
+    "vue-router": "^4.2.4"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "vite": "^4.4.5"
+  }
+}
