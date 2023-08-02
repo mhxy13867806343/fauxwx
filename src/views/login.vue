@@ -1,5 +1,6 @@
 <script setup>
-import {validateFormPassword} from '@/utils/validate/validateFormTools.js'
+import { useLocalStorage } from '@vueuse/core'
+import {validateFormPassword} from '@/utils/validate/validateFormTools.js';
 const form=reactive({
 	username: '',
 	password: ''
@@ -14,6 +15,32 @@ const rules=reactive({
 		{required: true,  trigger: 'blur',validator: (rules,values,cb)=>validateFormPassword(form,rules,values,cb)},
 	]
 })
+const loginChecked = 'loginChecked'
+const formUserNane='formUserNane'
+const checkedName = useLocalStorage(loginChecked, false)
+const formUserNaneValue = useLocalStorage(formUserNane, '')
+onMounted(()=>{
+	getInitCheckedName()
+})
+//点击复选框保存用户名
+const onClickSaveForm = (initialValue ) => {
+	if(!initialValue.length){
+		return
+	}
+	checkedName.value!=checkedName.value
+	formUserNaneValue.value=initialValue
+	return checkedName.value
+}
+// 获取初始化用户名
+const getInitCheckedName = () => {
+	if(checkedName.value){
+		if(formUserNaneValue.value.length){
+			form.username=formUserNaneValue.value
+		}
+		return ''
+	}
+}
+// 提交表单
 const onSubmit=(formEl)=>{
 	if (!formEl) return
 	formEl.validate((valid) => {
@@ -25,6 +52,13 @@ const onSubmit=(formEl)=>{
 		}
 	})
 }
+
+// 清除用户名
+const onFromUserNameClear=()=>{
+	form.username=''
+	formUserNaneValue.value=null
+	checkedName.value=false
+}
 </script>
 <template>
 	<div class="container">
@@ -33,12 +67,17 @@ const onSubmit=(formEl)=>{
 		         :rules="rules"
 		>
 			<el-form-item label="用户名" required size="large" prop="username">
-				<el-input clearable v-model="form.username" class="my-input"></el-input>
+				<el-input clearable v-model="form.username" class="my-input" @clear="onFromUserNameClear" />
 			</el-form-item>
-			<el-form-item label="密码" required prop="password">
+			<el-form-item label="密码" required prop="password" size="large">
 				<el-input clearable v-model="form.password"  show-password type="password" class="my-input"></el-input>
 			</el-form-item>
-			<el-form-item>
+			<el-form-item size="large" label="设置">
+			<el-checkbox v-model="checkedName"
+			@click="onClickSaveForm(form.username)"
+			>保存用户名</el-checkbox>
+			</el-form-item>
+			<el-form-item size="large">
 				<el-button type="primary" size="large" class="my-button"
 				@click="onSubmit(formRef)"
 				>登录</el-button>
@@ -86,5 +125,10 @@ const onSubmit=(formEl)=>{
 }
 .el-form-item__label{
 	color: #fff;
+}
+::v-deep(.el-form-item__error){
+	width: 100%;
+	text-align: center;
+	padding: 4px;
 }
 </style>
