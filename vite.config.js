@@ -9,6 +9,8 @@ import Compression from "unplugin-compression/vite";
 import viteCompression from 'vite-plugin-compression'
 // https://vitejs.dev/config/
 const viteTimestamp = new Date().getTime()
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 export default ({ mode }) => {
   const env = loadEnv(mode, process.cwd());
   const hostProcessVITE_API_URL=env.VITE_API_URL //获取环境变量
@@ -113,7 +115,10 @@ export default ({ mode }) => {
       modules:{},
       devSourcemap: false,
       postcss:{
-        plugins:[]
+        plugins:[
+          tailwindcss,
+          autoprefixer,
+        ]
       }
     },
     server:{

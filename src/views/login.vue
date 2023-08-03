@@ -17,8 +17,236 @@ const rules=reactive({
 })
 const loginChecked = 'loginChecked'
 const formUserNane='formUserNane'
+const isVersionDialog=ref(false)//版本内容
 const checkedName = useLocalStorage(loginChecked, false)
 const formUserNaneValue = useLocalStorage(formUserNane, '')
+const versionList=ref([
+		{
+			"version": "0.1",
+			"createTime": "2023-08-03",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Bug D"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-08-02",
+			"content": [
+				{
+					"name": "Feature C"
+				},
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-08-01",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Feature C"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-31",
+			"content": [
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-30",
+			"content": [
+				{
+					"name": "Bug D"
+				},
+				{
+					"name": "Update A"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-29",
+			"content": [
+				{
+					"name": "Feature C"
+				},
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-28",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Feature C"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-27",
+			"content": [
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-26",
+			"content": [
+				{
+					"name": "Bug D"
+				},
+				{
+					"name": "Update A"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-25",
+			"content": [
+				{
+					"name": "Feature C"
+				},
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-24",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Feature C"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-23",
+			"content": [
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-22",
+			"content": [
+				{
+					"name": "Bug D"
+				},
+				{
+					"name": "Update A"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-21",
+			"content": [
+				{
+					"name": "Feature C"
+				},
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-20",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Feature C"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-19",
+			"content": [
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-18",
+			"content": [
+				{
+					"name": "Bug D"
+				},
+				{
+					"name": "Update A"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-17",
+			"content": [
+				{
+					"name": "Feature C"
+				},
+				{
+					"name": "Fix B"
+				}
+			]
+		},
+		{
+			"version": "0.1",
+			"createTime": "2023-07-16",
+			"content": [
+				{
+					"name": "Update A"
+				},
+				{
+					"name": "Feature C"
+				}
+			]
+		},
+		{
+			"version": "0.2",
+			"createTime": "2023-07-15",
+			"content": [
+				{
+					"name": "Fix B"
+				}
+			]
+		}
+	] )//更新历史数据
 onMounted(()=>{
 	getInitCheckedName()
 })
@@ -61,7 +289,7 @@ const onFromUserNameClear=()=>{
 }
 </script>
 <template>
-	<div class="container">
+	<div class="login-container">
 		<div class="header">登录</div>
 		<el-form ref="formRef" :model="form" label-width="80px" class="my-form"  status-icon
 		         :rules="rules"
@@ -84,10 +312,30 @@ const onFromUserNameClear=()=>{
 			</el-form-item>
 		</el-form>
 	</div>
+	<el-link type="danger" @click="isVersionDialog=true">查看当前相关更新版本</el-link>
+	<el-dialog v-model="isVersionDialog" title="版本内容">
+		<ul>
+			<li v-for="(item,index) in versionList" :key="index" class="pb-4">
+				<h2 class="text-left py-1.5">
+					当前版本为:{{item.version}}
+				</h2>
+				<span class="block text-left text-sm		">更新时间:{{  item.createTime}}</span>
+				<div>
+					<span  v-for="(c1,index2) in item.content" :key="index2"
+					 class="block text-left text-sm w-screen p-0.5"
+					>
+						{{index2+1}}.{{ c1.name }}
+					</span>
+				</div>
+				<el-divider border-style="dashed" />
+			</li>
+		</ul>
+	</el-dialog>
+
 </template>
 
 <style scoped>
-.container {
+.login-container {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -131,4 +379,13 @@ const onFromUserNameClear=()=>{
 	text-align: center;
 	padding: 4px;
 }
+.el-link{
+	position: fixed;
+	right: 30px;
+	top: 20px;
+}
+
+</style>
+<style lang="scss" scoped>
+@import "@/style/base.scss"
 </style>
