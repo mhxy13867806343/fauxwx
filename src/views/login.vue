@@ -1,349 +1,34 @@
 <script setup>
 import {linkJson} from '@/utils/static-dt/static-link.js'
-import {loginChecked,formUserNane} from '@/utils/cache-pc/c-pc.js'
-import { ElMessage } from 'element-plus'
 import {getAsciiLength} from '@/utils/tools/regTools.js'
-import { useClipboard , useLocalStorage } from '@vueuse/core'
-import {validateFormPassword} from '@/utils/validate/validateFormTools.js';
-const form=reactive({
-	username: '',
-	password: ''
-})
-const formRef=ref(null)//表单验证domref
-const rules=reactive({
-	username: [
-		{required: true, message: '请输入用户名', trigger: 'blur'},
-		{min: 6, max: 32, message: '长度在 6 到 32 个字符', trigger: 'blur'}
-	],
-	password: [
-		{required: true,  trigger: 'blur',validator: (rules,values,cb)=>validateFormPassword(form,rules,values,cb)},
-	]
-})//表单验证对应prop名称
-const isVersionDialog=ref(false)//版本内容
-const checkedName = useLocalStorage(loginChecked, false)
-const formUserNaneValue = useLocalStorage(formUserNane, '')
-const versionList=ref([
-		{
-			"version": "0.1",
-			"createTime": "2023-08-03",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Bug D"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-08-02",
-			"content": [
-				{
-					"name": "Feature C"
-				},
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-08-01",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Feature C"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-31",
-			"content": [
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-30",
-			"content": [
-				{
-					"name": "Bug D"
-				},
-				{
-					"name": "Update A"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-29",
-			"content": [
-				{
-					"name": "Feature C"
-				},
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-28",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Feature C"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-27",
-			"content": [
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-26",
-			"content": [
-				{
-					"name": "Bug D"
-				},
-				{
-					"name": "Update A"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-25",
-			"content": [
-				{
-					"name": "Feature C"
-				},
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-24",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Feature C"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-23",
-			"content": [
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-22",
-			"content": [
-				{
-					"name": "Bug D"
-				},
-				{
-					"name": "Update A"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-21",
-			"content": [
-				{
-					"name": "Feature C"
-				},
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-20",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Feature C"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-19",
-			"content": [
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-18",
-			"content": [
-				{
-					"name": "Bug D"
-				},
-				{
-					"name": "Update A"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-17",
-			"content": [
-				{
-					"name": "Feature C"
-				},
-				{
-					"name": "Fix B"
-				}
-			]
-		},
-		{
-			"version": "0.1",
-			"createTime": "2023-07-16",
-			"content": [
-				{
-					"name": "Update A"
-				},
-				{
-					"name": "Feature C"
-				}
-			]
-		},
-		{
-			"version": "0.2",
-			"createTime": "2023-07-15",
-			"content": [
-				{
-					"name": "Fix B"
-				}
-			]
-		}
-	] )//更新历史数据
-onMounted(()=>{
-	getInitCheckedName()
-	getversionList()
-})
-//历史数据初始化配置信息
-const getversionList=()=>{
-	const l=versionList.value
-	return l.map(item=>{
-		item.activeName='1'
-		item.isActiveName=false
-		item.inputForm=''
-		item.isForm=''
-		item.userName=''
-	})
-}
-//点击复选框保存用户名
-const onClickSaveForm = (initialValue ) => {
-	if(!initialValue.length){
-		return
-	}
-	checkedName.value=!checkedName.value
-	formUserNaneValue.value=initialValue
-	return checkedName.value
-}
-// 获取初始化用户名
-const getInitCheckedName = () => {
-	if(checkedName.value){
-		if(formUserNaneValue.value.length){
-			form.username=formUserNaneValue.value
-		}
-		return ''
-	}
-}
-// 提交表单
-const onSubmit=(formEl)=>{
-	if (!formEl) return
-	formEl.validate((valid) => {
-		if (valid) {
-			console.log('submit!')
-		} else {
-			console.log('error submit!')
-			return false
-		}
-	})
-}
-
-// 清除用户名
-const onFromUserNameClear=()=>{
-	form.username=''
-	formUserNaneValue.value=null
-	checkedName.value=false
-}
-//复制
-const onClickCopy=()=>{
-	const source=window.location.href
-	const {  text, copy, copied, isSupported} = useClipboard({ source })
-	copy(source)
-	ElMessage.success('复制链接成功')
-	
-}
-//查看版本相关评论
-const onClickActiveName=item=>{
-	item.isActiveName=!item.isActiveName
-	item.isForm=false
-	onClearInput(item)
-}
-//点击评论进行回复操作
-const onClickFormInput=item=>{
-	item.isForm=!item.isForm
-	item.isActiveName=false
-	onClearInput(item)
-}
-//清除
-const onClearInput=item=>{
-	item.inputForm=''
-	item.userName=''
-}
-//请输入144字内的评论内容
-const onInputFormName=value=>{
-	return getAsciiLength(value)
-}
-//请输入您的昵称
-const onInputUserName=value=>{
-	return getAsciiLength(value)
-}
-//关闭弹窗的时候,重置输入框内容
-const onClierlAllForm=()=>{
-	getversionList()
-}
+import useTools from "@/hooks/useTools.js";
+const {onClickCopy,isDrawer}=useTools()
+import useForm from "@/hooks/useForm.js";
+const {  form ,
+	formRef,
+	rulesValidator,
+	checkedName,
+	onFromUserNameClear,
+	onClickSaveForm,onSubmit}=useForm()
+import useComments from "@/hooks/useComments.js";
+const {
+	versionList,
+	onClickActiveName,
+	onClickFormInput,
+	onClierlAllForm}=useComments()
+import useUpdate from "@/hooks/useUpdate.js";
+const {isUpdateDialogVisible,
+	numUpdate,versionMaxNum,
+	isVersionDialog,
+	onClickUpdateBtn,
+	onUpdateClickCancel,
+	onClickUpdateBtnOk}=useUpdate()
 </script>
 <template>
 	<div class="login-container">
 		<div class="header">登录</div>
 		<el-form ref="formRef" :model="form" label-width="80px" class="my-form"  status-icon
-		         :rules="rules"
+		         :rules="rulesValidator"
 		>
 			<el-form-item label="用户名" required size="large" prop="username">
 				<el-input clearable v-model="form.username" class="my-input" @clear="onFromUserNameClear" />
@@ -374,14 +59,59 @@ const onClierlAllForm=()=>{
 		</el-form>
 		
 	</div>
-	<span @click="isVersionDialog=true" class="fixed right-6 top-2/4 z-40" v-if="!isVersionDialog">
+	<span class="fixed right-6 top-2/4 z-40" @click="isDrawer=true">
+			<svg class="text-zinc-50	" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m13.691 15.778l-.63-.49a2.29 2.29 0 0 0 .023-.288a1.548 1.548 0 0 0-.024-.289l.625-.49a.153.153 0 0 0 .036-.188l-.59-1.02a.15.15 0 0 0-.183-.065l-.73.295a2.016 2.016 0 0 0-.502-.289l-.112-.778a.14.14 0 0 0-.141-.124h-1.18a.151.151 0 0 0-.147.124l-.112.778a2.355 2.355 0 0 0-.5.29l-.732-.296a.154.154 0 0 0-.183.065l-.59 1.02a.146.146 0 0 0 .036.189l.625.49a2.366 2.366 0 0 0 0 .577l-.625.49a.153.153 0 0 0-.035.188l.59 1.02a.15.15 0 0 0 .182.065l.731-.295a2.016 2.016 0 0 0 .501.289l.112.778a.147.147 0 0 0 .148.124h1.179a.151.151 0 0 0 .147-.124l.112-.778a2.178 2.178 0 0 0 .495-.29l.737.296a.154.154 0 0 0 .183-.065l.59-1.02a.153.153 0 0 0-.036-.189Zm-2.818.106a.884.884 0 1 1 .885-.884a.883.883 0 0 1-.885.884Z"/><path fill="currentColor" d="M14 2H6a2.006 2.006 0 0 0-2 2v16a2.006 2.006 0 0 0 2 2h12a2.006 2.006 0 0 0 2-2V8Zm4 18H6V4h7v5h5Z"/>
+	</svg>
+	</span>
+	<el-drawer v-model="isDrawer" :with-header="false" show-close size="20%">
+		<div class="flex">
+			<span @click="isVersionDialog=true" v-if="!isVersionDialog" class="flex items-center whitespace-nowrap
+	p-3.5
+">
 		<svg
-			class="text-zinc-50	"
-			xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
-	</span>
-	<span class="fixed right-6 top-1.5 z-40" v-if="!isVersionDialog" @click="onClickCopy">
-		<svg class="text-zinc-50	" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M16 3H4v13"/><path d="M8 7h12v12a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V7Z"/></g></svg>
-	</span>
+			class="text-sm"
+			xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M17.65 6.35A7.958 7.958 0 0 0 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08A5.99 5.99 0 0 1 12 18c-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+			
+		</svg>
+				<span class="text-xs">更新日志</span>
+			</span>
+			<span  v-if="!isVersionDialog" @click="onClickCopy" class="flex items-center whitespace-nowrap	p-3.5">
+		<svg class="text-sm" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M16 3H4v13"/><path d="M8 7h12v12a2 2 0 0 1-2 2h-8a2 2 0 0 1-2-2V7Z"/></g></svg>
+			<span class="text-xs	">复制链接</span>
+			</span>
+		</div>
+		<el-divider v-if="!isVersionDialog">
+			我是有底线的
+		</el-divider>
+		<p class="text-base text-left" title="提示:存在新版本">
+			当前版本:{{ versionList?.[0].version}}
+		</p>
+		<button
+			@click="onClickUpdateBtn"
+			class="pub-but mr-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded-full border-0">
+			进行更新
+		</button>
+	</el-drawer>
+	
+	<el-dialog v-model="isUpdateDialogVisible" title="更新版本" width="30%" center draggable align-center	class="rounded-s-full	">
+    <span>
+      当前版本为:{{ versionList?.[0].version}}，是否要进行新版本{{'0.4a'}}更新操作?如果更新完成之后，那么将展示最新的页面到您的浏览器中
+    </span>
+		<template #footer>
+      <span class="dialog-footer">
+        <button @click="onUpdateClickCancel"
+        class="bg-orange-600	 pub-but mr-4 bg-blue-500 hover:bg-orange-600 text-white font-bold py-2 px-4 border border-blue-700 rounded-full border-0"
+        >取消更新</button>
+        <button type="primary" @click="onClickUpdateBtnOk"
+                :class="{'opacity-50 cursor-not-allowed':numUpdate!==0||!numUpdate!==versionMaxNum}"
+        class="pub-but mr-4 bg-blue-500 hover:bg-blue-200 text-white font-bold py-2 px-4 border border-blue-700 rounded-full border-0"
+        >
+          {{ numUpdate===0||numUpdate>=versionMaxNum?'确认更新'
+	        :`更新进度${numUpdate}%`}}
+        </button>
+      </span>
+		</template>
+	</el-dialog>
 	<el-dialog v-model="isVersionDialog" title="版本内容" @close="onClierlAllForm">
 		<el-scrollbar height="600px">
 			<ul>
