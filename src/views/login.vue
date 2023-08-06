@@ -9,6 +9,7 @@ const {  form ,
 	rulesValidator,
 	checkedName,
 	onFromUserNameClear,
+	onFromUserNameBlur,
 	onClickSaveForm,onSubmit}=useForm()
 import useComments from "@/hooks/useComments.js";
 const {
@@ -31,7 +32,9 @@ const {isUpdateDialogVisible,
 		         :rules="rulesValidator"
 		>
 			<el-form-item label="用户名" required size="large" prop="username">
-				<el-input clearable v-model="form.username" class="my-input" @clear="onFromUserNameClear" />
+				<el-input clearable v-model="form.username" class="my-input" @clear="onFromUserNameClear"
+				@blur="onFromUserNameBlur"
+				/>
 			</el-form-item>
 			<el-form-item label="密码" required prop="password" size="large">
 				<el-input clearable v-model="form.password"  show-password type="password" class="my-input"></el-input>
@@ -49,6 +52,7 @@ const {isUpdateDialogVisible,
 			<div class="pr-3 flex">
 				<p  class="flex align-baseline pl-14 items-center	"
 				 v-for="(item,index) in linkJson" :key="index"
+				    :title="item.title"
 				>
 					<el-link type="primary" :href="item.url">
 					<span class="text-zinc-50 text-sm items-center	pr-1.5">{{  item.title}}</span>
@@ -181,7 +185,6 @@ const {isUpdateDialogVisible,
 		</el-scrollbar>
 	
 	</el-dialog>
-
 </template>
 
 <style scoped lang="scss">

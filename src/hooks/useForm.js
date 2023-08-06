@@ -1,7 +1,7 @@
 import { formUserNane , loginChecked } from "@/utils/cache-pc/c-pc.js";
 import { validateFormPassword } from "@/utils/validate/validateFormTools.js";
 import { useLocalStorage } from "@vueuse/core";
-
+import { ElMessage } from "element-plus";
 export default ()=>{
     //用户名和密码
     const form=reactive({
@@ -23,6 +23,18 @@ export default ()=>{
         password: [
             {required: true,  trigger: 'blur',validator: (rules,values,cb)=>validateFormPassword(form,rules,values,cb)},
         ]
+    })
+    watch(()=>checkedName.value,(k,v)=>{
+        if(k){
+            if(formUserNaneValue.value?.length){
+                form.username=formUserNaneValue.value
+            }
+           
+        }else{
+            form.username=''
+        }
+    },{
+        deep:true
     })
     const onClickSaveForm = (initialValue ) => {
         if(!initialValue.length){
@@ -55,12 +67,16 @@ export default ()=>{
             if (valid) {
                 console.log('submit!')
             } else {
-                console.log('error submit!')
+                ElMessage.error('请完善信息!!')
                 return false
             }
         })
     }
-    
+    const onFromUserNameBlur=()=>{
+        if(form.username.length){
+            formUserNaneValue.value=form.username
+        }
+    }
     return {
         form ,
         formRef,
@@ -69,6 +85,7 @@ export default ()=>{
         formUserNaneValue,
         onClickSaveForm,
         onFromUserNameClear,
-        onSubmit
+        onSubmit,
+        onFromUserNameBlur
     }
 }
