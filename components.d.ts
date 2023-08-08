@@ -28,5 +28,6 @@ declare module 'vue' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TopScrollProgress: typeof import('./src/components/TopScrollProgress/index.vue')['default']
   }
 }

@@ -26,6 +26,7 @@ const {isUpdateDialogVisible,
 	onClickUpdateBtnOk}=useUpdate()
 </script>
 <template>
+	<top-scroll-progress />
 	<div class="login-container">
 		<div class="header">登录</div>
 		<el-form ref="formRef" :model="form" label-width="80px" class="my-form"  status-icon
