@@ -49,7 +49,7 @@ const {isUpdateDialogVisible,
 				@click="onSubmit(formRef)"
 				>登录</el-button>
 			</el-form-item>
-			<div class="pr-3 flex">
+			<div class="pr-3 flex justify-center">
 				<p  class="flex align-baseline pl-14 items-center	"
 				 v-for="(item,index) in linkJson" :key="index"
 				    :title="item.title"
@@ -185,6 +185,15 @@ const {isUpdateDialogVisible,
 		</el-scrollbar>
 	
 	</el-dialog>
+	<div class="fixed bottom-0 w-full left-0">
+		<p class="text-stone-50 text-sm	">
+			当前共有<span class="text-rose-300	p-1 text-base		 text-orange-700">
+			 <el-statistic :value="268500" :value-style="{
+				 color:'#fff'
+			 }"/>
+			</span>人访问此网站
+		</p>
+	</div>
 </template>
 
 <style scoped lang="scss">

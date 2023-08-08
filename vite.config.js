@@ -123,7 +123,7 @@ export default ({ mode }) => {
     },
     server:{
       host: 'localhost',
-      port:'5173',
+      port:'50001',
       strictPort: true,
       open: true,
       proxy:{
